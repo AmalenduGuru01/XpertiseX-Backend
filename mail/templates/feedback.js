@@ -75,7 +75,7 @@ exports.getFeedback = (
     <body>
         <div class="container">
             <a href="https://xpertisex.vercel.app/"><img class="logo"
-                    src="Images\Logo-Full-Dark.png" alt="XpertiseX Logo"></a> 
+                    src="https://res.cloudinary.com/drh1mntgu/image/upload/v1713794838/Logo_e1lv1y.png" alt="XpertiseX Logo"></a> 
             <div class="message">Feedback From ${firstname} ${lastname}</div>
             <div class="body">
                 <p>Message: ${message}</p>
