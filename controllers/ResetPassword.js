@@ -33,11 +33,11 @@ exports.resetPasswordToken = async (req, res) => {
         //link generation...
         //create url
         // const url = `http://localhost:3000/update-password/${token}`;
-        const url = `https://study-notion-mega-project-3602xqx0r-dhruv9316.vercel.app/update-password/${token}`;
+        const url = `https://xpertisex.vercel.app/update-password/${token}`;
 
-        //sending... mail
+        //sending... mail   
         await mailSender(email, 
-            " Reset Ur Password => ",
+            " Reset your Password => ",
             `Password Reset Link: ${url}`);
             console.log("token ==>", token);
 
