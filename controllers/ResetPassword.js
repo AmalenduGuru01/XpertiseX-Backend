@@ -2,6 +2,8 @@ const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const {passwordUpdated} = require("../mail/templates/passwordUpdate");
+
 
 //resetPasswordTOKEN
 exports.resetPasswordToken = async (req, res) => {
@@ -37,7 +39,7 @@ exports.resetPasswordToken = async (req, res) => {
 
         //sending... mail   
         await mailSender(email, 
-            " Reset your Password => ",
+            "Reset your Password",
             `Password Reset Link: ${url}`);
             console.log("token ==>", token);
 
@@ -98,6 +100,9 @@ exports.resetPassword = async (req, res) => {
             {password:hashedPassword},
             {new:true},
         );
+        await mailSender(userDetails.email,
+            "Password reset successful",
+            passwordUpdated(userDetails.email,userDetails.firstName+" "+userDetails.lastName));
         //sending... final response
         return res.status(200).json({
             success:true,
