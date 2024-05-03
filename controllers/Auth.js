@@ -18,7 +18,7 @@ exports.sendotp = async (req, res) => {
     const checkUserPresent = await User.findOne({ email });
     //if user is already present
     if (checkUserPresent) {
-      console.log("User Already Exists, in short LODE LAG GAYE")
+      console.log("User Already Exists, in short LODE LAG GAYE");
       return res.status(200).json({
         sucess: true,
         message: "User Already Exists",
@@ -186,10 +186,17 @@ exports.signup = async (req, res) => {
       confirmPassword,
       accountType,
       contactNumber,
-      otp
+      otp,
     } = req.body;
     // Check if All Details are there or not
-    if (!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !otp
+    ) {
       return res.status(403).send({
         success: false,
         message: "All Fields are required",
@@ -214,25 +221,25 @@ exports.signup = async (req, res) => {
     }
 
     // Find the most recent OTP for the email
-    // const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
     // const response = await OTP.find({ email }).sort({ createdAt: -1 });
 
     //line number 232 se 245 ko baadmein comment out kar dena
 
     // console.log(response);
-    // if (response.length === 0) {
-    // 	// OTP not found for the email
-    // 	return res.status(400).json({
-    // 		success: false,
-    // 		message: "The OTP is not valid",
-    // 	});
-    // } else if (otp !== response[0].otp) {
-    // 	// Invalid OTP
-    // 	return res.status(400).json({
-    // 		success: false,
-    // 		message: "The OTP you entered is wrong !!",
-    // 	});
-    // }
+    if (response.length === 0) {
+      // OTP not found for the email
+      return res.status(400).json({
+        success: false,
+        message: "The OTP is not valid",
+      });
+    } else if (otp !== response[0].otp) {
+      // Invalid OTP
+      return res.status(400).json({
+        success: false,
+        message: "The OTP you entered is wrong !!",
+      });
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -259,7 +266,7 @@ exports.signup = async (req, res) => {
       additionalDetails: profileDetails._id,
       image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
-    console.log("HO GAYA HAI YEH, ache se dekh console ko ")
+    console.log("HO GAYA HAI YEH, ache se dekh console ko ");
     return res.status(200).json({
       success: true,
       user,
@@ -307,8 +314,8 @@ exports.login = async (req, res) => {
       };
       //generating... jwt token
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        // expiresIn:"24h",
-        // expiresIn:"365d"
+        // expiresIn: "24h",
+        expiresIn: "10d",
       });
       user.token = token;
       user.password = undefined;
@@ -340,14 +347,14 @@ exports.login = async (req, res) => {
 };
 
 //changing.. password
-//TODO: HOMEWORK
+
 exports.changePassword = async (req, res) => {
   try {
     //get data from req body
     const userDetails = await User.findById(req.user.id);
 
     //get oldPassword, newPassword, confirmNewPassowrd
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { oldPassword, newPassword } = req.body;
 
     //validation of oldPass
     const isPasswordMatch = await bcrypt.compare(
@@ -363,7 +370,9 @@ exports.changePassword = async (req, res) => {
     }
 
     // Match new password and confirm new password
-    // if (newPassword !== confirmNewPassword) {
+    // if (newPassword !== confirmPassword) {
+    //   console.log(newPassword)
+    //   console.log(confirmPassword)
     // 	// If new password and confirm new password do not match, return a 400 (Bad Request) error
     // 	return res.status(400).json({
     // 		success: false,

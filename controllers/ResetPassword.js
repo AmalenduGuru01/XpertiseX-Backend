@@ -36,6 +36,7 @@ exports.resetPasswordToken = async (req, res) => {
         //create url
         // const url = `http://localhost:3000/update-password/${token}`;
         const url = `https://xpertisex.vercel.app/update-password/${token}`;
+        // const url = `https://xpertisex.vercel.app/update-password/${token}`;
 
         //sending... mail   
         await mailSender(email, 
@@ -46,7 +47,8 @@ exports.resetPasswordToken = async (req, res) => {
         //returning... final response
         return res.json({
             success:true,
-            message:'Email sent successfully, please check email and change password',
+            message: 'Email sent successfully, please check email and change password',
+            url
         });
 
     } catch(error){
